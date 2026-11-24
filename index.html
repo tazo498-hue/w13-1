@@ -1,0 +1,2432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tongue Twister Challenge</title>
+
+<style>
+:root {
+    --bg: #0b1020;
+    --panel: #151d32;
+    --panel-light: #202b43;
+    --purple: #9b87f5;
+    --blue: #60a5fa;
+    --green: #4ade80;
+    --pink: #f472b6;
+    --yellow: #facc15;
+    --red: #fb7185;
+    --text: #f8fafc;
+    --muted: #a5b4ca;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 10% 0%, #302050, transparent 40%),
+        radial-gradient(circle at 100% 90%, #142e50, transparent 40%),
+        var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+button, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.12);
+}
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.app {
+    max-width: 880px;
+    margin: auto;
+    padding: 24px 18px 48px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.logo {
+    font-size: 50px;
+}
+
+h1 {
+    font-size: clamp(30px, 5vw, 46px);
+    margin: 4px 0;
+    line-height: 1.2;
+}
+
+.subtitle {
+    color: var(--muted);
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 22px 0;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid #ffffff12;
+    border-radius: 18px;
+    text-align: center;
+    padding: 14px 6px;
+}
+
+.stat-label {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+#timer {
+    color: var(--yellow);
+}
+
+#xp {
+    color: var(--green);
+}
+
+.progress {
+    height: 9px;
+    background: var(--panel-light);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 12px 0 25px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--purple), var(--blue));
+    transition: width 0.4s;
+}
+
+.panel {
+    background: var(--panel);
+    border: 1px solid #ffffff12;
+    border-radius: 24px;
+    padding: clamp(18px, 4vw, 30px);
+    margin-bottom: 20px;
+    box-shadow: 0 12px 35px #00000020;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.eyebrow {
+    color: var(--purple);
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+h2 {
+    margin: 8px 0 12px;
+    font-size: 27px;
+}
+
+.description {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.cluster-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 22px 0;
+}
+
+.cluster-button {
+    background: var(--panel-light);
+    border: 2px solid transparent;
+    color: var(--text);
+    padding: 14px 8px;
+    border-radius: 14px;
+    font-size: 25px;
+    font-weight: bold;
+}
+
+.cluster-button.active {
+    border-color: var(--purple);
+    background: #332950;
+}
+
+.cluster-button small {
+    display: block;
+    font-size: 12px;
+    font-weight: normal;
+    color: var(--muted);
+}
+
+.cluster-button.done {
+    border-color: var(--green);
+}
+
+.cluster-button.done::after {
+    content: " ✓";
+    color: var(--green);
+    font-size: 14px;
+}
+
+.btn {
+    border: 0;
+    border-radius: 13px;
+    padding: 13px 17px;
+    font-weight: 700;
+    color: white;
+    background: var(--panel-light);
+}
+
+.primary {
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+}
+
+.secondary {
+    border: 1px solid #ffffff24;
+}
+
+.success {
+    background: #166534;
+}
+
+.danger {
+    background: #9f1239;
+}
+
+.full {
+    width: 100%;
+    margin-top: 14px;
+}
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.button-row .btn {
+    flex: 1;
+}
+
+.stage-nav {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.stage {
+    padding: 10px 3px;
+    border-radius: 10px;
+    background: var(--panel-light);
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.stage.current {
+    color: white;
+    background: #6745bb;
+}
+
+.stage.past {
+    color: var(--green);
+}
+
+.target-cluster {
+    font-size: 46px;
+    font-weight: 900;
+    color: var(--purple);
+    text-align: center;
+}
+
+.ipa {
+    text-align: center;
+    color: var(--muted);
+    font-size: 20px;
+}
+
+.word-list {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.word-chip {
+    background: var(--panel-light);
+    border: 1px solid #ffffff15;
+    border-radius: 12px;
+    padding: 10px 15px;
+    color: white;
+    font-size: 19px;
+}
+
+.twister {
+    background: #0d1527;
+    border-radius: 18px;
+    padding: 26px 18px;
+    margin: 20px 0;
+    text-align: center;
+    font-size: clamp(24px, 4.5vw, 36px);
+    font-weight: 800;
+    line-height: 1.65;
+}
+
+.highlight {
+    color: var(--pink);
+}
+
+.tip {
+    border-left: 4px solid var(--blue);
+    background: #172740;
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 14px;
+    margin: 18px 0;
+}
+
+.tip strong {
+    color: var(--blue);
+}
+
+.speed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 18px 0;
+}
+
+.speed-option {
+    background: var(--panel-light);
+    border: 2px solid transparent;
+    color: white;
+    padding: 14px 5px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.speed-option.selected {
+    border-color: var(--yellow);
+    color: var(--yellow);
+}
+
+.speed-option small {
+    display: block;
+    color: var(--muted);
+    font-weight: normal;
+}
+
+.mic-area {
+    text-align: center;
+    padding: 18px 0;
+}
+
+.mic-button {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 0;
+    color: white;
+    background: linear-gradient(135deg, #ec4899, #8b5cf6);
+    font-size: 39px;
+    box-shadow: 0 0 30px #ec489944;
+}
+
+.mic-button.recording {
+    background: #e11d48;
+    animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 #fb718544;
+    }
+    50% {
+        box-shadow: 0 0 0 18px #fb718500;
+    }
+}
+
+#micStatus {
+    color: var(--muted);
+    font-size: 14px;
+    margin: 14px 0 0;
+}
+
+.feedback {
+    padding: 20px;
+    background: #0d1527;
+    border-radius: 16px;
+    margin-top: 18px;
+}
+
+.feedback-label {
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.transcript {
+    font-size: 19px;
+    margin: 6px 0 16px;
+    overflow-wrap: anywhere;
+}
+
+.score {
+    font-size: 46px;
+    font-weight: 900;
+    color: var(--green);
+    text-align: center;
+}
+
+.matched {
+    color: var(--green);
+}
+
+.unmatched {
+    color: var(--red);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+}
+
+.score-track {
+    height: 10px;
+    background: var(--panel-light);
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.score-fill {
+    background: var(--green);
+    height: 100%;
+    width: 0;
+    transition: width 0.4s;
+}
+
+.notice {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 18px;
+}
+
+.challenge-banner {
+    padding: 15px;
+    border-radius: 15px;
+    background: linear-gradient(120deg, #572f12, #563b12);
+    border: 1px solid #facc1544;
+    color: var(--yellow);
+    text-align: center;
+    font-weight: bold;
+}
+
+.report-hero {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.trophy {
+    font-size: 75px;
+}
+
+.report-grade {
+    font-size: 35px;
+    color: var(--yellow);
+    font-weight: 900;
+}
+
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+
+.report-stat {
+    background: var(--panel-light);
+    padding: 15px;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.report-stat strong {
+    display: block;
+    color: var(--purple);
+    font-size: 29px;
+}
+
+.report-row {
+    display: grid;
+    grid-template-columns: 45px 1fr 80px;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 0;
+    border-bottom: 1px solid #ffffff12;
+}
+
+.report-bar {
+    background: var(--panel-light);
+    height: 10px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.report-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+}
+
+.report-number {
+    text-align: right;
+    font-size: 13px;
+}
+
+.manual-check {
+    background: var(--panel-light);
+    padding: 15px;
+    border-radius: 13px;
+    margin-top: 15px;
+}
+
+.manual-check label {
+    display: block;
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+input[type="checkbox"] {
+    accent-color: #8b5cf6;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+@media (max-width: 500px) {
+    .app {
+        padding: 14px 10px 30px;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+
+    .stage {
+        font-size: 10px;
+    }
+
+    .btn {
+        font-size: 13px;
+    }
+
+    .report-row {
+        gap: 7px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+        <div class="logo">🎙️</div>
+        <h1>Tongue Twister Challenge</h1>
+        <div class="subtitle">
+            Train your tongue. Speak with confidence.
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <div class="stat">
+            <div class="stat-label">TIME LEFT</div>
+            <div class="stat-value" id="timer">05:00</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">TOTAL XP</div>
+            <div class="stat-value" id="xp">0</div>
+        </div>
+        <div class="stat">
+            <div class="stat-label">PRACTICED</div>
+            <div class="stat-value" id="practiced">0/9</div>
+        </div>
+    </div>
+
+    <div class="progress"
+         role="progressbar"
+         aria-label="Practice progress"
+         aria-valuemin="0"
+         aria-valuemax="9"
+         aria-valuenow="0"
+         id="progress">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- START SCREEN -->
+
+    <section class="panel" id="startScreen">
+
+        <div class="eyebrow">5-minute speaking workout</div>
+
+        <h2>Ready to challenge your tongue?</h2>
+
+        <p class="description">
+            Practice nine English consonant clusters.
+            Listen carefully, speak clearly, and gradually
+            increase your speaking speed.
+        </p>
+
+        <div class="cluster-grid">
+            <div class="cluster-button">sm<small>smart</small></div>
+            <div class="cluster-button">sn<small>snake</small></div>
+            <div class="cluster-button">st<small>street</small></div>
+            <div class="cluster-button">bl<small>blue</small></div>
+            <div class="cluster-button">br<small>bread</small></div>
+            <div class="cluster-button">cl<small>clean</small></div>
+            <div class="cluster-button">cr<small>crow</small></div>
+            <div class="cluster-button">fl<small>fly</small></div>
+            <div class="cluster-button">fr<small>fruit</small></div>
+        </div>
+
+        <div class="tip">
+            <strong>Today's mission</strong><br>
+            Connect the two consonants without adding
+            an extra vowel.<br>
+            자음 사이에 '으' 소리를 넣지 않고
+            두 자음을 자연스럽게 연결하세요.
+        </div>
+
+        <p class="description">
+            🎧 Listen & Notice — 60 seconds<br>
+            🎤 Listen & Repeat — 120 seconds<br>
+            ⚡ Speed Challenge — 90 seconds<br>
+            🏆 Final Review — 30 seconds
+        </p>
+
+        <button class="btn secondary full" id="testAudio">
+            🔊 Test Speaker
+        </button>
+
+        <button class="btn primary full" id="startButton">
+            Start Challenge →
+        </button>
+
+        <p class="notice">
+            Microphone access is optional. Speech recognition
+            may require an internet connection and browser
+            permission. Chrome or Edge is recommended.
+        </p>
+
+    </section>
+
+    <!-- PRACTICE SCREEN -->
+
+    <section class="hidden" id="practiceScreen">
+
+        <div class="stage-nav">
+            <div class="stage" id="stage0">1. Listen</div>
+            <div class="stage" id="stage1">2. Repeat</div>
+            <div class="stage" id="stage2">3. Speed</div>
+            <div class="stage" id="stage3">4. Report</div>
+        </div>
+
+        <div class="panel">
+
+            <div class="eyebrow" id="stageLabel"></div>
+
+            <h2 id="stageTitle"></h2>
+
+            <p class="description" id="stageInstruction"></p>
+
+            <p class="description" id="stageTime"></p>
+
+            <div class="cluster-grid" id="clusterSelector"></div>
+
+        </div>
+
+        <div class="panel">
+
+            <div class="target-cluster" id="targetCluster"></div>
+
+            <div class="ipa" id="targetIPA"></div>
+
+            <div class="word-list" id="wordList"></div>
+
+            <div class="tip">
+                <strong>💡 Pronunciation Tip</strong>
+                <div id="pronunciationTip"></div>
+            </div>
+
+            <div class="challenge-banner hidden"
+                 id="challengeBanner">
+                ⚡ SPEED CHALLENGE
+                <div id="challengeText"></div>
+            </div>
+
+            <div class="twister" id="twister"></div>
+
+            <div class="speed-grid" id="speedOptions">
+
+                <button class="speed-option"
+                        data-speed="0.7">
+                    🐢 Slow
+                    <small>0.7×</small>
+                </button>
+
+                <button class="speed-option selected"
+                        data-speed="1">
+                    🚶 Normal
+                    <small>1.0×</small>
+                </button>
+
+                <button class="speed-option"
+                        data-speed="1.25">
+                    🚀 Fast
+                    <small>1.25×</small>
+                </button>
+
+            </div>
+
+            <button class="btn primary full" id="listenButton">
+                🔊 Listen to the Tongue Twister
+            </button>
+
+            <div class="mic-area hidden" id="micArea">
+
+                <button class="mic-button"
+                        id="micButton"
+                        aria-label="Start or stop speech recognition">
+                    🎤
+                </button>
+
+                <p id="micStatus" role="status">
+                    Tap the microphone and read the sentence.
+                </p>
+
+                <button class="btn secondary full"
+                        id="manualButton">
+                    Practice without microphone
+                </button>
+
+            </div>
+
+            <!-- MANUAL PRACTICE -->
+
+            <div class="manual-check hidden" id="manualCheck">
+
+                <strong>Self-assessment</strong>
+
+                <label>
+                    <input type="checkbox" id="check1">
+                    I connected the two consonants.
+                </label>
+
+                <label>
+                    <input type="checkbox" id="check2">
+                    I avoided adding an extra vowel.
+                </label>
+
+                <label>
+                    <input type="checkbox" id="check3">
+                    I completed the whole sentence.
+                </label>
+
+                <button class="btn success full" id="saveManual">
+                    Save Practice
+                </button>
+
+            </div>
+
+            <!-- SPEECH FEEDBACK -->
+
+            <div class="feedback hidden"
+                 id="feedback"
+                 aria-live="polite">
+
+                <div class="feedback-label">What you said</div>
+
+                <div class="transcript" id="transcript"></div>
+
+                <div class="feedback-label">Target sentence</div>
+
+                <div class="transcript" id="comparison"></div>
+
+                <div class="feedback-label" style="text-align:center">
+                    Word Match
+                </div>
+
+                <div class="score" id="matchScore">0%</div>
+
+                <div class="score-track">
+                    <div class="score-fill" id="scoreFill"></div>
+                </div>
+
+                <div id="targetFeedback"></div>
+
+                <p id="feedbackMessage"></p>
+
+                <button class="btn secondary full" id="retryButton">
+                    ↻ Try Again
+                </button>
+
+                <p class="notice">
+                    Word Match measures agreement between
+                    recognized words and the target sentence.
+                    It is not a phoneme-level pronunciation score.
+                </p>
+
+            </div>
+
+            <div class="button-row">
+
+                <button class="btn secondary" id="previousButton">
+                    ← Previous
+                </button>
+
+                <button class="btn primary" id="nextButton">
+                    Next →
+                </button>
+
+            </div>
+
+            <button class="btn success full" id="nextStageButton">
+                Continue to Speaking →
+            </button>
+
+            <button class="btn secondary full" id="finishButton">
+                Finish & View Report
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- FINAL REPORT -->
+
+    <section class="panel hidden" id="reportScreen">
+
+        <div class="eyebrow">Your results</div>
+
+        <div class="report-hero">
+
+            <div class="trophy">🏆</div>
+
+            <h2>Challenge Complete!</h2>
+
+            <div class="report-grade" id="reportGrade"></div>
+
+            <p class="description" id="reportMessage"></p>
+
+        </div>
+
+        <div class="report-grid">
+
+            <div class="report-stat">
+                <strong id="finalXP">0</strong>
+                Total XP
+            </div>
+
+            <div class="report-stat">
+                <strong id="finalAverage">—</strong>
+                Average Best Word Match
+            </div>
+
+            <div class="report-stat">
+                <strong id="finalClusters">0/9</strong>
+                Clusters Practiced
+            </div>
+
+            <div class="report-stat">
+                <strong id="finalAttempts">0</strong>
+                Speaking Attempts
+            </div>
+
+        </div>
+
+        <h2>Consonant Cluster Review</h2>
+
+        <div id="reportResults"></div>
+
+        <div class="tip">
+
+            <strong>🎯 Your Next Goal</strong>
+
+            <p id="recommendation"></p>
+
+        </div>
+
+        <p class="notice">
+            Results are based on automatic word recognition
+            and optional self-assessment. They do not constitute
+            a validated pronunciation assessment.
+        </p>
+
+        <button class="btn primary full" id="restartButton">
+            Play Again ↻
+        </button>
+
+    </section>
+
+</div>
+
+<script>
+
+"use strict";
+
+// ============================================
+// 1. LEARNING CONTENT
+// ============================================
+
+const lessons = [
+
+    {
+        cluster: "sm",
+        ipa: "/sm/",
+        words: ["small", "smart", "smile"],
+        sentence: "Small smart students smile.",
+        tip: "Make a continuous /s/ sound, then close your lips for /m/. Do not insert a vowel between them. /s/ 소리를 낸 뒤 입술을 닫아 /m/으로 바로 연결하세요."
+    },
+
+    {
+        cluster: "sn",
+        ipa: "/sn/",
+        words: ["snow", "snake", "snack"],
+        sentence: "Sneaky snakes sneak snacks.",
+        tip: "Keep the airflow moving from /s/ into /n/. Place your tongue behind your upper teeth for /n/. 두 자음 사이에 모음을 넣지 마세요."
+    },
+
+    {
+        cluster: "st",
+        ipa: "/st/",
+        words: ["stop", "street", "stone"],
+        sentence: "Steve stops at the steep stone steps.",
+        tip: "Move directly from /s/ to /t/. The /t/ after /s/ usually has less aspiration than the /t/ in top. /s/와 /t/를 끊지 않고 연결하세요."
+    },
+
+    {
+        cluster: "bl",
+        ipa: "/bl/",
+        words: ["black", "blue", "blocks"],
+        sentence: "Blake blows big blue bubbles.",
+        tip: "Release your lips for /b/, then place your tongue tip behind your upper teeth for /l/. /b/에서 /l/로 바로 연결하세요."
+    },
+
+    {
+        cluster: "br",
+        ipa: "/br/",
+        words: ["brave", "brown", "bread"],
+        sentence: "Brave Brian brings brown bread.",
+        tip: "Release /b/ and move directly into the English /r/. Avoid touching the roof of your mouth with your tongue tip. /l/처럼 혀끝을 윗잇몸에 붙이지 마세요."
+    },
+
+    {
+        cluster: "cl",
+        ipa: "/kl/",
+        words: ["clever", "clean", "clock"],
+        sentence: "Clever Clara cleans cloudy clocks.",
+        tip: "Move from /k/ at the back of your mouth to /l/ at the front. /k/와 /l/ 사이에 '으' 소리를 넣지 마세요."
+    },
+
+    {
+        cluster: "cr",
+        ipa: "/kr/",
+        words: ["crazy", "crow", "crackers"],
+        sentence: "Crazy crows crack crispy crackers.",
+        tip: "Release /k/ and immediately form the English /r/. Keep your tongue tip from touching the roof of your mouth. /k/와 /r/을 한 번에 연결하세요."
+    },
+
+    {
+        cluster: "fl",
+        ipa: "/fl/",
+        words: ["flat", "fluffy", "fly"],
+        sentence: "Five fluffy flies fly freely.",
+        tip: "Touch your upper teeth lightly to your lower lip for /f/, then move your tongue tip into /l/. /f/ 다음에 모음을 추가하지 마세요."
+    },
+
+    {
+        cluster: "fr",
+        ipa: "/fr/",
+        words: ["fresh", "friend", "fruit"],
+        sentence: "Friendly Fred fries fresh fruit.",
+        tip: "Begin with /f/ and move directly into /r/. Slightly round your lips if helpful. /f/에서 /r/로 연결하며 혀끝을 윗잇몸에 붙이지 마세요."
+    }
+
+];
+
+// ============================================
+// 2. APPLICATION STATE
+// ============================================
+
+const $ = id => document.getElementById(id);
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+const stages = [
+
+    {
+        label: "STEP 1 · LISTEN & NOTICE",
+        title: "Listen carefully",
+        instruction:
+            "Tap the words and listen to the full sentence. Notice how the two consonants connect.",
+        duration: 60
+    },
+
+    {
+        label: "STEP 2 · LISTEN & REPEAT",
+        title: "Now it's your turn!",
+        instruction:
+            "Read the sentence aloud. Focus on clear consonant clusters rather than speed.",
+        duration: 120
+    },
+
+    {
+        label: "STEP 3 · SPEED CHALLENGE",
+        title: "Can you speak faster?",
+        instruction:
+            "Listen at each speed. Try slow, normal, and fast while keeping the words clear.",
+        duration: 90
+    }
+
+];
+
+const speedLevels = [0.7, 1, 1.25];
+
+let currentLesson = 0;
+let currentStage = 0;
+let currentSpeed = 1;
+let challengeLevel = 0;
+
+let xp = 0;
+let attempts = 0;
+let timeLeft = 300;
+let stageStartedAt = 0;
+let sessionStartedAt = 0;
+let timerInterval = null;
+
+let sessionActive = false;
+let recognition = null;
+let listening = false;
+let recognitionToken = 0;
+
+let bestScores = {};
+let practicedClusters = new Set();
+let heardClusters = new Set();
+let manualResults = {};
+let rewardedAttempts = new Set();
+
+// ============================================
+// 3. TEXT-TO-SPEECH
+// ============================================
+
+function speak(text, rate = 1) {
+
+    if (listening) {
+        return;
+    }
+
+    if (!("speechSynthesis" in window)) {
+        alert("Speech playback is not supported by this browser.");
+        return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+
+    utterance.lang = "en-US";
+    utterance.rate = rate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+
+    const englishVoice =
+        voices.find(v => v.lang === "en-US" && v.localService) ||
+        voices.find(v => v.lang === "en-US") ||
+        voices.find(v => v.lang.startsWith("en"));
+
+    if (englishVoice) {
+        utterance.voice = englishVoice;
+    }
+
+    window.speechSynthesis.speak(utterance);
+
+}
+
+function stopAudio() {
+    if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+    }
+}
+
+$("testAudio").addEventListener("click", () => {
+    speak("Welcome to the Tongue Twister Challenge!");
+});
+
+// ============================================
+// 4. SESSION TIMER
+// ============================================
+
+function formatTime(seconds) {
+
+    seconds = Math.max(0, seconds);
+
+    const minutes = Math.floor(seconds / 60);
+    const remaining = seconds % 60;
+
+    return String(minutes).padStart(2, "0") +
+        ":" +
+        String(remaining).padStart(2, "0");
+
+}
+
+function updateTimer() {
+
+    if (!sessionActive) return;
+
+    const elapsed = Math.floor(
+        (Date.now() - sessionStartedAt) / 1000
+    );
+
+    timeLeft = Math.max(0, 300 - elapsed);
+
+    $("timer").textContent = formatTime(timeLeft);
+
+    $("timer").style.color =
+        timeLeft <= 30 ? "var(--red)" : "var(--yellow)";
+
+    if (currentStage < 3) {
+
+        const stageElapsed = Math.floor(
+            (Date.now() - stageStartedAt) / 1000
+        );
+
+        const remaining = Math.max(
+            0,
+            stages[currentStage].duration - stageElapsed
+        );
+
+        $("stageTime").textContent =
+            remaining > 0
+                ? "Suggested stage time: " + formatTime(remaining)
+                : "Suggested time completed. Move on when ready.";
+
+    }
+
+    // Reserve the final 30 seconds for reviewing results.
+
+    if (elapsed >= 270 && currentStage < 3) {
+        finishSession(false);
+    }
+
+    if (timeLeft <= 0) {
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+        sessionActive = false;
+
+        if (currentStage < 3) {
+            finishSession(true);
+        }
+
+    }
+
+}
+
+function startSession() {
+
+    stopAudio();
+
+    currentLesson = 0;
+    currentStage = 0;
+    currentSpeed = 1;
+    challengeLevel = 0;
+
+    xp = 0;
+    attempts = 0;
+    timeLeft = 300;
+
+    bestScores = {};
+    practicedClusters = new Set();
+    heardClusters = new Set();
+    manualResults = {};
+    rewardedAttempts = new Set();
+
+    sessionActive = true;
+
+    sessionStartedAt = Date.now();
+    stageStartedAt = Date.now();
+
+    $("startScreen").classList.add("hidden");
+    $("reportScreen").classList.add("hidden");
+    $("practiceScreen").classList.remove("hidden");
+
+    clearInterval(timerInterval);
+
+    timerInterval = setInterval(updateTimer, 250);
+
+    updateDashboard();
+    renderLesson();
+    updateTimer();
+
+    window.scrollTo(0, 0);
+
+}
+
+$("startButton").addEventListener("click", startSession);
+
+// ============================================
+// 5. INTERFACE RENDERING
+// ============================================
+
+function highlightWord(word, cluster) {
+
+    const span = document.createElement("span");
+
+    if (word.toLowerCase().startsWith(cluster)) {
+
+        const marked = document.createElement("span");
+
+        marked.className = "highlight";
+        marked.textContent = word.slice(0, cluster.length);
+
+        span.appendChild(marked);
+
+        span.appendChild(
+            document.createTextNode(
+                word.slice(cluster.length)
+            )
+        );
+
+    } else {
+
+        span.textContent = word;
+
+    }
+
+    return span;
+
+}
+
+function renderHighlightedSentence(container, sentence, cluster) {
+
+    container.replaceChildren();
+
+    sentence.split(/(\s+)/).forEach(word => {
+
+        if (/^\s+$/.test(word)) {
+            container.appendChild(
+                document.createTextNode(word)
+            );
+        } else {
+            container.appendChild(
+                highlightWord(word, cluster)
+            );
+        }
+
+    });
+
+}
+
+function updateDashboard() {
+
+    $("xp").textContent = xp;
+
+    $("practiced").textContent =
+        practicedClusters.size + "/9";
+
+    $("progressFill").style.width =
+        (practicedClusters.size / lessons.length * 100) + "%";
+
+    $("progress").setAttribute(
+        "aria-valuenow",
+        practicedClusters.size
+    );
+
+}
+
+function renderClusters() {
+
+    const container = $("clusterSelector");
+
+    container.replaceChildren();
+
+    lessons.forEach((lesson, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "cluster-button";
+
+        button.textContent = lesson.cluster;
+
+        if (index === currentLesson) {
+            button.classList.add("active");
+        }
+
+        const completed = currentStage === 0
+            ? heardClusters.has(lesson.cluster)
+            : practicedClusters.has(lesson.cluster);
+
+        if (completed) {
+            button.classList.add("done");
+        }
+
+        button.setAttribute(
+            "aria-pressed",
+            String(index === currentLesson)
+        );
+
+        button.addEventListener("click", () => {
+
+            cancelRecognition();
+            stopAudio();
+
+            currentLesson = index;
+
+            renderLesson();
+
+        });
+
+        container.appendChild(button);
+
+    });
+
+}
+
+function renderLesson() {
+
+    if (currentStage >= 3) return;
+
+    const lesson = lessons[currentLesson];
+    const stage = stages[currentStage];
+
+    $("stageLabel").textContent = stage.label;
+    $("stageTitle").textContent = stage.title;
+    $("stageInstruction").textContent = stage.instruction;
+
+    $("targetCluster").textContent = lesson.cluster;
+    $("targetIPA").textContent = lesson.ipa;
+
+    $("pronunciationTip").textContent = lesson.tip;
+
+    renderHighlightedSentence(
+        $("twister"),
+        lesson.sentence,
+        lesson.cluster
+    );
+
+    $("wordList").replaceChildren();
+
+    lesson.words.forEach(word => {
+
+        const button = document.createElement("button");
+
+        button.className = "word-chip";
+
+        button.appendChild(
+            highlightWord(word, lesson.cluster)
+        );
+
+        button.addEventListener("click", () => {
+            speak(word, 0.8);
+        });
+
+        $("wordList").appendChild(button);
+
+    });
+
+    renderClusters();
+
+    for (let i = 0; i < 4; i++) {
+
+        $("stage" + i).classList.toggle(
+            "current",
+            i === currentStage
+        );
+
+        $("stage" + i).classList.toggle(
+            "past",
+            i < currentStage
+        );
+
+    }
+
+    $("micArea").classList.toggle(
+        "hidden",
+        currentStage === 0
+    );
+
+    $("challengeBanner").classList.toggle(
+        "hidden",
+        currentStage !== 2
+    );
+
+    $("feedback").classList.add("hidden");
+    $("manualCheck").classList.add("hidden");
+
+    $("previousButton").disabled = currentLesson === 0;
+    $("nextButton").disabled =
+        currentLesson === lessons.length - 1;
+
+    $("check1").checked = false;
+    $("check2").checked = false;
+    $("check3").checked = false;
+
+    setMicState(false);
+
+    if (currentStage === 0) {
+
+        $("nextStageButton").textContent =
+            "Continue to Speaking →";
+
+    } else if (currentStage === 1) {
+
+        $("nextStageButton").textContent =
+            "Start Speed Challenge ⚡";
+
+    } else {
+
+        $("nextStageButton").textContent =
+            "Next Speed Level →";
+
+    }
+
+    if (currentStage === 2) {
+
+        currentSpeed = speedLevels[challengeLevel];
+
+        updateChallengeBanner();
+
+    }
+
+    updateSpeedButtons();
+
+}
+
+function updateSpeedButtons() {
+
+    document.querySelectorAll(".speed-option").forEach(button => {
+
+        const selected =
+            Number(button.dataset.speed) === currentSpeed;
+
+        button.classList.toggle("selected", selected);
+
+        button.setAttribute(
+            "aria-pressed",
+            String(selected)
+        );
+
+    });
+
+}
+
+document.querySelectorAll(".speed-option").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        stopAudio();
+
+        currentSpeed = Number(button.dataset.speed);
+
+        if (currentStage === 2) {
+            challengeLevel = speedLevels.indexOf(currentSpeed);
+            updateChallengeBanner();
+        }
+
+        updateSpeedButtons();
+
+    });
+
+});
+
+$("listenButton").addEventListener("click", () => {
+
+    if (listening) return;
+
+    const lesson = lessons[currentLesson];
+
+    speak(lesson.sentence, currentSpeed);
+
+    if (!heardClusters.has(lesson.cluster)) {
+
+        heardClusters.add(lesson.cluster);
+        xp += 5;
+
+        updateDashboard();
+        renderClusters();
+
+    }
+
+});
+
+function changeLesson(direction) {
+
+    cancelRecognition();
+    stopAudio();
+
+    currentLesson = Math.max(
+        0,
+        Math.min(
+            lessons.length - 1,
+            currentLesson + direction
+        )
+    );
+
+    renderLesson();
+
+}
+
+$("previousButton").addEventListener("click", () => {
+    changeLesson(-1);
+});
+
+$("nextButton").addEventListener("click", () => {
+    changeLesson(1);
+});
+
+// ============================================
+// 6. LEARNING STAGE CONTROL
+// ============================================
+
+function updateChallengeBanner() {
+
+    const descriptions = [
+        "Level 1 — Slow & Clear · 0.7×",
+        "Level 2 — Natural Rhythm · 1.0×",
+        "Level 3 — Fast & Fluent · 1.25×"
+    ];
+
+    $("challengeText").textContent =
+        descriptions[challengeLevel];
+
+    $("nextStageButton").textContent =
+        challengeLevel === 2
+            ? "Complete Challenge 🏆"
+            : "Next Speed Level →";
+
+}
+
+function chooseChallengeLesson() {
+
+    // Focus on the lowest recorded word-match result.
+
+    const scoredLessons = lessons
+        .map((lesson, index) => ({
+            index,
+            score: bestScores[lesson.cluster]
+        }))
+        .filter(item => typeof item.score === "number")
+        .sort((a, b) => a.score - b.score);
+
+    if (scoredLessons.length) {
+        return scoredLessons[0].index;
+    }
+
+    const unpracticed = lessons.findIndex(
+        lesson => !practicedClusters.has(lesson.cluster)
+    );
+
+    return unpracticed >= 0 ? unpracticed : 0;
+
+}
+
+function advanceStage() {
+
+    cancelRecognition();
+    stopAudio();
+
+    if (currentStage === 0) {
+
+        currentStage = 1;
+        currentSpeed = 0.7;
+        currentLesson = 0;
+
+        stageStartedAt = Date.now();
+
+    } else if (currentStage === 1) {
+
+        currentStage = 2;
+        challengeLevel = 0;
+        currentSpeed = speedLevels[challengeLevel];
+        currentLesson = chooseChallengeLesson();
+
+        stageStartedAt = Date.now();
+
+    } else if (currentStage === 2) {
+
+        if (challengeLevel < 2) {
+
+            challengeLevel++;
+            currentSpeed = speedLevels[challengeLevel];
+
+        } else {
+
+            finishSession(true);
+            return;
+
+        }
+
+    }
+
+    renderLesson();
+    updateTimer();
+
+}
+
+$("nextStageButton").addEventListener(
+    "click",
+    advanceStage
+);
+
+// ============================================
+// 7. SPEECH RECOGNITION
+// ============================================
+
+function setMicState(active) {
+
+    listening = active;
+
+    $("micButton").classList.toggle(
+        "recording",
+        active
+    );
+
+    $("micButton").textContent = active ? "⏹" : "🎤";
+
+    $("micButton").setAttribute(
+        "aria-label",
+        active
+            ? "Stop speech recognition"
+            : "Start speech recognition"
+    );
+
+    $("micStatus").textContent = active
+        ? "Listening... Speak clearly!"
+        : "Tap the microphone and read the sentence.";
+
+    $("listenButton").disabled = active;
+
+    document.querySelectorAll(".word-chip").forEach(button => {
+        button.disabled = active;
+    });
+
+}
+
+function cancelRecognition() {
+
+    recognitionToken++;
+
+    if (recognition) {
+
+        try {
+            recognition.abort();
+        } catch (error) {}
+
+        recognition = null;
+
+    }
+
+    setMicState(false);
+
+}
+
+function startRecognition() {
+
+    if (!SpeechRecognition) {
+
+        $("micStatus").textContent =
+            "Speech recognition is unavailable. Use self-assessment below.";
+
+        $("manualCheck").classList.remove("hidden");
+
+        return;
+
+    }
+
+    if (!sessionActive || currentStage === 0) return;
+
+    stopAudio();
+
+    $("feedback").classList.add("hidden");
+    $("manualCheck").classList.add("hidden");
+
+    recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    const token = ++recognitionToken;
+    const lessonIndex = currentLesson;
+    const stageAtStart = currentStage;
+    const speedAtStart = challengeLevel;
+
+    let receivedResult = false;
+    let recognitionFailed = false;
+
+    recognition.onstart = () => {
+
+        if (token !== recognitionToken) return;
+
+        setMicState(true);
+
+    };
+
+    recognition.onresult = event => {
+
+        if (token !== recognitionToken) return;
+
+        if (receivedResult) return;
+
+        receivedResult = true;
+
+        const resultIndex = event.resultIndex || 0;
+
+        const spoken =
+            event.results[resultIndex][0].transcript;
+
+        evaluateSpeech(
+            spoken,
+            lessonIndex,
+            stageAtStart,
+            speedAtStart
+        );
+
+    };
+
+    recognition.onerror = event => {
+
+        if (token !== recognitionToken) return;
+
+        recognitionFailed = true;
+
+        setMicState(false);
+
+        const messages = {
+
+            "not-allowed":
+                "Microphone permission was denied. Allow microphone access or use self-assessment.",
+
+            "service-not-allowed":
+                "Speech recognition service is unavailable.",
+
+            "no-speech":
+                "No speech detected. Please try again.",
+
+            "audio-capture":
+                "Microphone not found. Check your device settings.",
+
+            "network":
+                "Network error. Try again or use self-assessment.",
+
+            "aborted":
+                "Recording cancelled."
+
+        };
+
+        $("micStatus").textContent =
+            messages[event.error] ||
+            "Recognition failed. Please try again.";
+
+        $("manualCheck").classList.remove("hidden");
+
+    };
+
+    recognition.onend = () => {
+
+        if (token !== recognitionToken) return;
+
+        recognition = null;
+
+        if (!recognitionFailed) {
+
+            setMicState(false);
+
+            if (!receivedResult) {
+
+                $("micStatus").textContent =
+                    "No result received. Please try again.";
+
+            }
+
+        } else {
+
+            listening = false;
+
+        }
+
+    };
+
+    try {
+
+        recognition.start();
+
+        setMicState(true);
+
+        $("micStatus").textContent =
+            "Connecting to microphone...";
+
+    } catch (error) {
+
+        recognition = null;
+
+        setMicState(false);
+
+        $("micStatus").textContent =
+            "Unable to start microphone. Try again or use self-assessment.";
+
+        $("manualCheck").classList.remove("hidden");
+
+    }
+
+}
+
+$("micButton").addEventListener("click", () => {
+
+    if (listening && recognition) {
+
+        try {
+
+            recognition.stop();
+
+            $("micStatus").textContent =
+                "Processing your speech...";
+
+        } catch (error) {
+
+            cancelRecognition();
+
+        }
+
+    } else {
+
+        startRecognition();
+
+    }
+
+});
+
+// ============================================
+// 8. WORD MATCH ASSESSMENT
+// ============================================
+
+function tokenize(text) {
+
+    return text
+        .toLowerCase()
+        .replace(/[’']/g, "")
+        .replace(/[^a-z0-9\s]/g, " ")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean);
+
+}
+
+// Word-level edit distance with alignment.
+// Identifies substitutions, omissions and insertions.
+
+function alignWords(expected, spoken) {
+
+    const n = expected.length;
+    const m = spoken.length;
+
+    const dp = Array.from(
+        { length: n + 1 },
+        () => Array(m + 1).fill(0)
+    );
+
+    for (let i = 0; i <= n; i++) {
+        dp[i][0] = i;
+    }
+
+    for (let j = 0; j <= m; j++) {
+        dp[0][j] = j;
+    }
+
+    for (let i = 1; i <= n; i++) {
+
+        for (let j = 1; j <= m; j++) {
+
+            const cost =
+                expected[i - 1] === spoken[j - 1] ? 0 : 1;
+
+            dp[i][j] = Math.min(
+                dp[i - 1][j] + 1,
+                dp[i][j - 1] + 1,
+                dp[i - 1][j - 1] + cost
+            );
+
+        }
+
+    }
+
+    const matched = Array(n).fill(false);
+
+    let i = n;
+    let j = m;
+
+    while (i > 0 || j > 0) {
+
+        if (i > 0 && j > 0) {
+
+            const same =
+                expected[i - 1] === spoken[j - 1];
+
+            const cost = same ? 0 : 1;
+
+            if (
+                dp[i][j] ===
+                dp[i - 1][j - 1] + cost
+            ) {
+
+                matched[i - 1] = same;
+
+                i--;
+                j--;
+
+                continue;
+
+            }
+
+        }
+
+        if (
+            i > 0 &&
+            dp[i][j] === dp[i - 1][j] + 1
+        ) {
+
+            i--;
+
+        } else if (j > 0) {
+
+            j--;
+
+        } else {
+
+            break;
+
+        }
+
+    }
+
+    const score = Math.max(
+        0,
+        Math.round(
+            (1 - dp[n][m] / Math.max(n, 1)) * 100
+        )
+    );
+
+    return {
+        score,
+        matched
+    };
+
+}
+
+function evaluateSpeech(
+    spokenText,
+    lessonIndex,
+    stageAtStart,
+    speedAtStart
+) {
+
+    const lesson = lessons[lessonIndex];
+
+    const expected = tokenize(lesson.sentence);
+    const spoken = tokenize(spokenText);
+
+    if (!spoken.length) {
+
+        $("micStatus").textContent =
+            "No words recognized. Please try again.";
+
+        return;
+
+    }
+
+    const result = alignWords(expected, spoken);
+
+    attempts++;
+
+    practicedClusters.add(lesson.cluster);
+
+    const previousBest =
+        bestScores[lesson.cluster] ?? -1;
+
+    bestScores[lesson.cluster] =
+        Math.max(previousBest, result.score);
+
+    const rewardKey =
+        lesson.cluster + ":" +
+        stageAtStart + ":" +
+        (stageAtStart === 2 ? speedAtStart : 0);
+
+    // Award XP once per activity, not for endless retries.
+
+    if (!rewardedAttempts.has(rewardKey)) {
+
+        rewardedAttempts.add(rewardKey);
+
+        xp += 10 + Math.round(result.score / 10);
+
+    }
+
+    $("transcript").textContent = spokenText;
+
+    $("comparison").replaceChildren();
+
+    let totalTargets = 0;
+    let matchedTargets = 0;
+    const reviewWords = new Set();
+
+    expected.forEach((word, index) => {
+
+        const span = document.createElement("span");
+
+        span.className = result.matched[index]
+            ? "matched"
+            : "unmatched";
+
+        span.textContent = word + " ";
+
+        $("comparison").appendChild(span);
+
+        if (word.startsWith(lesson.cluster)) {
+
+            totalTargets++;
+
+            if (result.matched[index]) {
+
+                matchedTargets++;
+
+            } else {
+
+                reviewWords.add(word);
+
+            }
+
+        }
+
+    });
+
+    $("matchScore").textContent = result.score + "%";
+
+    $("scoreFill").style.width = result.score + "%";
+
+    const scoreColor = result.score >= 80
+        ? "var(--green)"
+        : result.score >= 50
+            ? "var(--yellow)"
+            : "var(--red)";
+
+    $("matchScore").style.color = scoreColor;
+    $("scoreFill").style.background = scoreColor;
+
+    $("targetFeedback").textContent =
+        "Target words recognized: " +
+        matchedTargets +
+        "/" +
+        totalTargets;
+
+    let message;
+
+    if (result.score === 100) {
+
+        message =
+            "🌟 Excellent word match! Try maintaining the same clarity at a faster speed.";
+
+    } else if (result.score >= 80) {
+
+        message =
+            "👏 Great work! Listen once more and repeat the sentence.";
+
+    } else if (result.score >= 50) {
+
+        message =
+            "💪 Good effort. Slow down and connect each consonant cluster carefully.";
+
+    } else {
+
+        message =
+            "🎯 Try the individual words first, then read the whole sentence slowly.";
+
+    }
+
+    if (reviewWords.size) {
+
+        message +=
+            " Review these words: " +
+            Array.from(reviewWords).join(", ") +
+            ".";
+
+    }
+
+    $("feedbackMessage").textContent = message;
+
+    $("feedback").classList.remove("hidden");
+
+    updateDashboard();
+    renderClusters();
+
+}
+
+$("retryButton").addEventListener("click", () => {
+
+    $("feedback").classList.add("hidden");
+
+    startRecognition();
+
+});
+
+// ============================================
+// 9. MANUAL PRACTICE FALLBACK
+// ============================================
+
+$("manualButton").addEventListener("click", () => {
+
+    cancelRecognition();
+
+    $("manualCheck").classList.toggle("hidden");
+
+});
+
+$("saveManual").addEventListener("click", () => {
+
+    const checks = [
+        $("check1").checked,
+        $("check2").checked,
+        $("check3").checked
+    ];
+
+    if (!checks[2]) {
+
+        alert("Read the whole sentence before saving.");
+
+        return;
+
+    }
+
+    const lesson = lessons[currentLesson];
+
+    const completedChecks = checks.filter(Boolean).length;
+
+    manualResults[lesson.cluster] = Math.max(
+        manualResults[lesson.cluster] || 0,
+        completedChecks
+    );
+
+    practicedClusters.add(lesson.cluster);
+
+    const rewardKey =
+        lesson.cluster + ":" +
+        currentStage + ":" +
+        (currentStage === 2 ? challengeLevel : 0);
+
+    if (!rewardedAttempts.has(rewardKey)) {
+
+        rewardedAttempts.add(rewardKey);
+
+        xp += 10;
+
+    }
+
+    $("manualCheck").classList.add("hidden");
+
+    $("micStatus").textContent =
+        "✓ Self-assessed practice saved. Great effort!";
+
+    updateDashboard();
+    renderClusters();
+
+});
+
+// ============================================
+// 10. FINAL REPORT
+// ============================================
+
+function finishSession(early = true) {
+
+    cancelRecognition();
+    stopAudio();
+
+    currentStage = 3;
+
+    if (early) {
+
+        sessionActive = false;
+
+        clearInterval(timerInterval);
+        timerInterval = null;
+
+    }
+
+    $("practiceScreen").classList.add("hidden");
+    $("startScreen").classList.add("hidden");
+    $("reportScreen").classList.remove("hidden");
+
+    renderReport();
+
+    window.scrollTo(0, 0);
+
+}
+
+function renderReport() {
+
+    const scores = Object.values(bestScores);
+
+    const average = scores.length
+        ? Math.round(
+            scores.reduce((a, b) => a + b, 0) /
+            scores.length
+        )
+        : null;
+
+    $("finalXP").textContent = xp;
+
+    $("finalAverage").textContent =
+        average === null ? "—" : average + "%";
+
+    $("finalClusters").textContent =
+        practicedClusters.size + "/9";
+
+    $("finalAttempts").textContent = attempts;
+
+    let grade;
+    let message;
+
+    if (
+        practicedClusters.size === 9 &&
+        average !== null &&
+        average >= 90 &&
+        scores.length === 9
+    ) {
+
+        grade = "Tongue Twister Master";
+
+        message =
+            "Outstanding practice and word recognition across all nine clusters!";
+
+    } else if (practicedClusters.size >= 6) {
+
+        grade = "Cluster Champion";
+
+        message =
+            "Excellent commitment! Keep practicing the remaining clusters.";
+
+    } else if (practicedClusters.size >= 3) {
+
+        grade = "Speaking Explorer";
+
+        message =
+            "You're building stronger speaking habits through practice.";
+
+    } else {
+
+        grade = "Pronunciation Rookie";
+
+        message =
+            "Every speaking attempt counts. Keep practicing!";
+
+    }
+
+    $("reportGrade").textContent = grade;
+    $("reportMessage").textContent = message;
+
+    const results = $("reportResults");
+
+    results.replaceChildren();
+
+    lessons.forEach(lesson => {
+
+        const row = document.createElement("div");
+
+        row.className = "report-row";
+
+        const name = document.createElement("strong");
+
+        name.textContent = lesson.cluster;
+
+        const bar = document.createElement("div");
+
+        bar.className = "report-bar";
+
+        const fill = document.createElement("div");
+
+        fill.className = "report-bar-fill";
+
+        const number = document.createElement("div");
+
+        number.className = "report-number";
+
+        const score = bestScores[lesson.cluster];
+
+        if (typeof score === "number") {
+
+            fill.style.width = score + "%";
+
+            fill.style.background = score >= 80
+                ? "var(--green)"
+                : score >= 50
+                    ? "var(--yellow)"
+                    : "var(--red)";
+
+            number.textContent = score + "%";
+
+        } else if (
+            manualResults[lesson.cluster] !== undefined
+        ) {
+
+            fill.style.width = "100%";
+            fill.style.background = "var(--blue)";
+
+            number.textContent = "Self-check";
+
+        } else if (
+            heardClusters.has(lesson.cluster)
+        ) {
+
+            fill.style.width = "0%";
+            number.textContent = "Listened";
+
+        } else {
+
+            fill.style.width = "0%";
+            number.textContent = "Not tried";
+
+        }
+
+        bar.appendChild(fill);
+
+        row.appendChild(name);
+        row.appendChild(bar);
+        row.appendChild(number);
+
+        results.appendChild(row);
+
+    });
+
+    const weakClusters = Object.entries(bestScores)
+        .filter(([, score]) => score < 80)
+        .sort((a, b) => a[1] - b[1])
+        .slice(0, 3)
+        .map(([cluster]) => cluster);
+
+    const remaining = lessons
+        .filter(lesson =>
+            !practicedClusters.has(lesson.cluster)
+        )
+        .map(lesson => lesson.cluster);
+
+    if (weakClusters.length) {
+
+        $("recommendation").textContent =
+            "Review these clusters based on word recognition: " +
+            weakClusters.join(", ") +
+            ". Practice slowly and avoid extra vowel sounds.";
+
+    } else if (remaining.length) {
+
+        $("recommendation").textContent =
+            "Try the remaining clusters: " +
+            remaining.join(", ") +
+            ". Listen first, then repeat.";
+
+    } else {
+
+        $("recommendation").textContent =
+            "Continue practicing /bl/ versus /br/, /cl/ versus /cr/, and /fl/ versus /fr/ while maintaining natural rhythm.";
+
+    }
+
+}
+
+$("finishButton").addEventListener("click", () => {
+
+    finishSession(true);
+
+});
+
+$("restartButton").addEventListener("click", () => {
+
+    cancelRecognition();
+    stopAudio();
+
+    clearInterval(timerInterval);
+
+    sessionActive = false;
+
+    $("reportScreen").classList.add("hidden");
+    $("startScreen").classList.remove("hidden");
+
+    $("timer").textContent = "05:00";
+    $("timer").style.color = "var(--yellow)";
+
+    $("xp").textContent = "0";
+    $("practiced").textContent = "0/9";
+
+    $("progressFill").style.width = "0%";
+
+    $("progress").setAttribute("aria-valuenow", "0");
+
+    window.scrollTo(0, 0);
+
+});
+
+window.addEventListener("pagehide", () => {
+
+    cancelRecognition();
+    stopAudio();
+    clearInterval(timerInterval);
+
+});
+
+</script>
+
+</body>
+</html>
